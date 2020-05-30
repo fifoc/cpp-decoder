@@ -36,11 +36,15 @@ struct FIF {
 }
 ```
 Create your FIF struct object:
-`FIF* fif = new FIF;`
+`cpp
+FIF* fif = new FIF;
+`
 Write file data to FIF->data
 
 Read FIF:
-`FIF_read(fif)`
+`cpp
+FIF_read(fif)
+`
 Return codes (signed int):
 
 Less than 0: Error reading file
