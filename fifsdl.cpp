@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <thread>
 #include <SDL2/SDL.h>
 #include "fif_decoder.h"
 
@@ -94,15 +96,14 @@ int main(int argc, char** args) {
             signed int res = FIF_read(fif);
             if(res == 0) {
                 std::cout << "Playback done\n";
-                SDL_Delay(50);
             } else if(res < 0) {
                 std::cout << "FIF error " << (int)res << ".\n";
                 exit(2);
             } else if(res > 0) {
-                SDL_Delay(res);
+                std::this_thread::sleep_for(std::chrono::milliseconds(res));
             }
         } else {
-            SDL_Delay(50);
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
         
         //Write image data to SDL
