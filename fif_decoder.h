@@ -64,6 +64,7 @@ signed int FIF_read(FIF* fiffile) {
         fiffile->currentFG.r = 0;
         fiffile->currentFG.g = 0;
         fiffile->currentFG.b = 0;
+        return 1;
     }
     
     //Main reading loop
