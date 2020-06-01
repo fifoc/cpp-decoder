@@ -170,6 +170,11 @@ signed int FIF_read(FIF* fiffile) {
                 fiffile->eof = 1;
                 return 0;
             }
+            //Unused
+            case 0x40: {
+                for(unsigned int i=0;i<8;i++) fif_readbyte(fiffile);
+                break;
+            }
             //Unsupported
             default: {
                 std::cout << "Unsupported opcode " << std::hex << (unsigned int)opbyte << " at offset " << fiffile->datapos-1 << ".\n";
