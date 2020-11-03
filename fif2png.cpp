@@ -1,5 +1,5 @@
 //C++ FastIF decoder
-//Copyright (C) 2020 Extrasklep
+//Copyright (C) 2020 I.C.
 
 #include <iostream>
 #include <fstream>
@@ -7,11 +7,13 @@
 #include "fif_decoder.h"
 
 int main(int argc, char** args) {
-    if(argc<3) {
+    if(argc != 3) {
         std::cout << "Usage: " << args[0] << " [FIF input file] [PNG output file]\n";
         return 0;
     }
+    
     FIF* fif = new FIF;
+    
     std::ifstream ifile(args[1],std::ios::in|std::ios::binary|std::ios::ate);
     if(!ifile.is_open()) {
         perror(args[1]);
@@ -41,6 +43,7 @@ int main(int argc, char** args) {
             image[y][x] = png::rgb_pixel(fif->decoded_data[y*fif->width+x].r,fif->decoded_data[y*fif->width+x].g,fif->decoded_data[y*fif->width+x].b);
         }
     }
+    
     image.write(args[2]);
     
     FIF_free(fif);

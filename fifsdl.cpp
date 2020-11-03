@@ -1,5 +1,5 @@
 //FastIF SDL viewer
-//Copyright (C) 2020 Extrasklep
+//Copyright (C) 2020 I.C.
 
 #include <iostream>
 #include <fstream>
@@ -27,13 +27,15 @@ uint32_t mapRGB(int r, int g, int b) {return ((r & 0xff) << 16) + ((g & 0xff) <<
 bool init(const char* title) {
     //Initialize SDL
     if(SDL_Init( SDL_INIT_VIDEO ) < 0) {
-        std::cout << "SDL init error: " << SDL_GetError();
+        std::cout << "SDL init error: " << SDL_GetError() << '\n';
+        return 1;
     }
     else {
         //Create window
         window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, XRES, YRES, SDL_WINDOW_SHOWN);
         if(window == NULL) {
-            std::cout << "SDL window error: " << SDL_GetError();
+            std::cout << "SDL window error: " << SDL_GetError() << '\n';
+            return 1;
         }
         else {
             //Get window surface
@@ -51,7 +53,7 @@ void quit() {
 }
 
 int main(int argc, char** args) {
-    if(argc<2) {
+    if(argc != 2) {
         std::cout << "Usage: " << args[0] << " [FIF input file]\n";
         return 0;
     }
@@ -69,8 +71,10 @@ int main(int argc, char** args) {
         ifile.close();
     }
     
+    signed int res;
+    
     //Read FIF
-    signed int res = FIF_read(fif);
+    res = FIF_read(fif);
     if(res < 0) {
         std::cout << "FIF error " << (int)res << ".\n";
         exit(2);
@@ -82,7 +86,11 @@ int main(int argc, char** args) {
     bool quitRequest=false;
     SDL_Event sdlEvent;
     
-    init("FIF viewer");
+    res = init("FIF viewer");
+    if(res) {
+        std::cout << "SDL could not be initalized.\n";
+        exit(1);
+    }
     
     while(quitRequest==0) {
         //Handle events on queue 
@@ -93,7 +101,7 @@ int main(int argc, char** args) {
         
         //Play FIF
         if(!fif->eof) {
-            signed int res = FIF_read(fif);
+            res = FIF_read(fif);
             if(res == 0) {
                 std::cout << "Playback done\n";
             } else if(res < 0) {
@@ -111,7 +119,7 @@ int main(int argc, char** args) {
             ((uint32_t*)screenSurface->pixels)[i] = mapRGB(fif->decoded_data[i].r,fif->decoded_data[i].g,fif->decoded_data[i].b);
         }
         
-        SDL_UpdateWindowSurface( window );
+        SDL_UpdateWindowSurface(window);
     }
     
     quit();

@@ -1,5 +1,5 @@
 //C++ FastIF decoder
-//Copyright (C) 2020 Extrasklep
+//Copyright (C) 2020 I.C.
 
 #pragma once
 #include <iostream>
@@ -112,6 +112,7 @@ signed int FIF_read(FIF* fiffile) {
     while(!fiffile->eof) {
         unsigned char opbyte = 0;
         switch(opbyte = fif_readbyte(fiffile)) {
+            
             //BG color
             case 0x01: {
                 fiffile->currentBG.r = fif_readbyte(fiffile);
@@ -119,6 +120,7 @@ signed int FIF_read(FIF* fiffile) {
                 fiffile->currentBG.b = fif_readbyte(fiffile);
                 break;
             }
+            
             //FG color
             case 0x02: {
                 fiffile->currentFG.r = fif_readbyte(fiffile);
@@ -126,6 +128,7 @@ signed int FIF_read(FIF* fiffile) {
                 fiffile->currentFG.b = fif_readbyte(fiffile);
                 break;
             }
+            
             //Horizontal line
             case 0x10: {
                 unsigned int x = fif_readbyte(fiffile);
@@ -136,6 +139,7 @@ signed int FIF_read(FIF* fiffile) {
                 }
                 break;
             }
+            
             //Fill
             case 0x11: {
                 unsigned int x = fif_readbyte(fiffile);
@@ -150,11 +154,13 @@ signed int FIF_read(FIF* fiffile) {
                 }
                 break;
             }
+            
             //Sleep
             case 0x12: {
                 return fif_readbyte(fiffile) * 10;
                 break;
             }
+            
             //Vertical line
             case 0x13: {
                 unsigned int x = fif_readbyte(fiffile);
@@ -165,16 +171,19 @@ signed int FIF_read(FIF* fiffile) {
                 }
                 break;
             }
+            
             //EOF
             case 0x20: {
                 fiffile->eof = 1;
                 return 0;
             }
+            
             //Unused
             case 0x40: {
                 for(unsigned int i=0;i<8;i++) fif_readbyte(fiffile);
                 break;
             }
+            
             //Unsupported
             default: {
                 std::cout << "Unsupported opcode " << std::hex << (unsigned int)opbyte << " at offset " << fiffile->datapos-1 << ".\n";
